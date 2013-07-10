@@ -25,7 +25,7 @@ class ts_summary:
     '''
             内容
     '''
-    content = ''
+    content = None
     
     def __init__(self, title, link):
         self.title = title
@@ -61,6 +61,6 @@ def parse_item(item):
     tmp = p.sub('', item)
     list = re.split('>', tmp)
     result = ts_summary(list[1], list[0])
-    content = ts_content.parse(result.link)
-    print(content)
+    result.content = ts_content.parse(result.link)
+#     print(content)
     return result

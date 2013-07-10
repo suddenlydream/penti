@@ -15,6 +15,8 @@ class ts_content:
         图说的段落
     '''
     parts = []
+    def __str__(self):
+        return 'parts: ' + str(self.parts)
 
 '''
 图说段落
@@ -28,7 +30,8 @@ class ts_content_part(json.JSONEncoder):
         段落的子项
     '''
     items = []
-    
+    def __str__(self):
+        return 'title: ' + self.title + ' items: ' + str(self.items)
 #     def default(self, obj):
 #         d = {}
 #         d['title'] = obj.title
@@ -64,16 +67,17 @@ def parse(url):
 #     print(url)
     page = urlopen(url)
     html = page.read()
-    result = perform_parse(html)
+    parts = perform_parse(html)
+    result = ts_content()
     
-#     res_str = json.dumps(result, sort_keys=True, indent=4)
-#     print(res_str)
-    for item in result:
+    result.parts = parts;
+
+#     for item in parts:
 #         print(item.items)
-        if item.items:
-            print('title: ' + item.title)
-            for sub_item in item.items:
-                print(sub_item)
+#         if item.items:
+#             print('title: ' + item.title)
+#             for sub_item in item.items:
+#                 print(sub_item)
     return result
 
 def perform_parse(html):
@@ -127,4 +131,4 @@ def remove_tags(source):
     p = re.compile(r"(<.*?>|</.*?>|<|/>|&nbsp;)")
     return p.sub('', source)
 
-parse('http://www.dapenti.com/blog/more.asp?name=xilei&id=79405')
+# parse('http://www.dapenti.com/blog/more.asp?name=xilei&id=79405')
