@@ -54,18 +54,15 @@ def perform_parse(html):
         index.append(pos)
         
         if(i > 0):
-            start = int(index[i-1])
-            pos = int(pos)
-            print(start)
-            print(pos)
-            part = html[start, pos]
-            print(part)
+            part = html[index[i-1]:pos]
+            parse_part(part)
 #         print(m.start())
 #         print(m.group())
         i += 1
     return ''
 
 def parse_part(html):
+    
     print()
 
 parse('http://www.dapenti.com/blog/more.asp?name=xilei&id=79405')
