@@ -22,10 +22,6 @@ class ts_summary:
             标题
     '''
     title = ''
-    '''
-            内容
-    '''
-    content = None
     
     def __init__(self, title, link):
         self.title = title
@@ -34,17 +30,14 @@ class ts_summary:
     def __str__(self):
         return 'title: ' + self.title + ' link: ' + self.link
 
-def parse(url):
+def parse_summary(url):
     page = urlopen(url)
     html = page.read()
-    result = perform_parse(html)
-#     print(html)
+    source = html.decode('GBK')
+    result = perform_parse_summary(source)
     return result
 
-def perform_parse(html):
-    print(html)
-    html = html.decode('GBK')
-   
+def perform_parse_summary(html):
     p = re.compile(r'<li><a href=.*?</a></li>')
     
     list = p.findall(html)
@@ -52,15 +45,15 @@ def perform_parse(html):
     
     results = []
     for item in list:
-        it = parse_item(item)
+        it = parse_summary_item(item)
         results.append(it)
     return results
 
-def parse_item(item):
+def parse_summary_item(item):
     p = re.compile(r"((<li><a href=)|</a></li>)")
     tmp = p.sub('', item)
     list = re.split('>', tmp)
     result = ts_summary(list[1], list[0])
-    result.content = ts_content.parse(result.link)
+#     result.content = ts_content.parse(result.link)
 #     print(content)
     return result

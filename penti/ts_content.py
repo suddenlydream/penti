@@ -11,6 +11,7 @@ import json
 图说内容
 '''
 class ts_content:
+    title = ''
     '''
         图说的段落
     '''
@@ -63,26 +64,19 @@ class ts_content_part_item(json.JSONEncoder):
 #         d.update(obj.__dict__)
 #         return obj.__dict__
     
-def parse(url):
+def parse_content(url):
 #     print(url)
     page = urlopen(url)
     html = page.read()
-    parts = perform_parse(html)
+    source = html.decode('GBK')
+    
+    parts = perform_parse_content(source)
     result = ts_content()
     
     result.parts = parts;
-
-#     for item in parts:
-#         print(item.items)
-#         if item.items:
-#             print('title: ' + item.title)
-#             for sub_item in item.items:
-#                 print(sub_item)
     return result
 
-def perform_parse(html):
-#     print(html)
-    source = html.decode('GBK')
+def perform_parse_content(source):
     li = re.finditer(r'<P>【\d*】.*?</P>', source)
     i = 0
 
@@ -99,12 +93,12 @@ def perform_parse(html):
         
         if(i > 0):
             part_source = source[index[i - 1]:pos]
-            res_item = parse_part(part_source)
+            res_item = parse_content_part(part_source)
             res[i - 1].items = res_item
         i += 1
     return res
 
-def parse_part(source):
+def parse_content_part(source):
     li = re.finditer(r'<(P|DIV)>.*?</(P|DIV)>', source)
     res = []
     for m in li:
@@ -131,4 +125,7 @@ def remove_tags(source):
     p = re.compile(r"(<.*?>|</.*?>|<|/>|&nbsp;)")
     return p.sub('', source)
 
-# parse('http://www.dapenti.com/blog/more.asp?name=xilei&id=79405')
+# res = parse('http://www.dapenti.com/blog/more.asp?name=xilei&id=79405')
+# from ts_json import json_encode
+# ss = json_encode().encode(res)
+# print(ss)
