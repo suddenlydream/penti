@@ -1,0 +1,24 @@
+---
+name: dapenti
+version: 1
+cron:
+- description: fetch tushuo1
+  url: /fetch?i=1
+  schedule: "0 15 * * *"
+
+- description: fetch tushuo2
+  url: /fetch?i=2
+  schedule: "0 16 * * *"
+
+- description: fetch tushuo3
+  url: /fetch?i=3
+  schedule: "0 17 * * *"
+
+- description: fetch tushuo4
+  url: /fetch?i=4
+  schedule: "0 18 * * *"
+
+- description: fetch tushuo5
+  url: /fetch?i=5
+  schedule: "45 18 * * *"
+...

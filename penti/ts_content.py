@@ -1,19 +1,25 @@
+# coding: utf-8
 '''
 Created on 2013-7-8
-
 @author: huqiming
 '''
-
-from urllib.request import urlopen
-import re
 import json
+import re
+import urllib2
 '''
 图说内容
 '''
 class ts_content:
+    '''
+    图说标题
+    '''
     title = ''
     '''
-        图说的段落
+    图说日期
+    '''
+    date = ''
+    '''
+    图说段落
     '''
     parts = []
     def __str__(self):
@@ -24,23 +30,15 @@ class ts_content:
 '''
 class ts_content_part(json.JSONEncoder):
     '''
-        图说段落标题
+    段落标题
     '''
     title = ''
     '''
-        段落的子项
+    段落的子内容
     '''
     items = []
     def __str__(self):
         return 'title: ' + self.title + ' items: ' + str(self.items)
-#     def default(self, obj):
-#         d = {}
-#         d['title'] = obj.title
-#         d['items'] = obj.items
-#         d['__class__'] = obj.__class__.__name__
-#         d['__module__'] = obj.__module__
-#         d.update(obj.__dict__())
-#         return obj.__dict__
 
 class ts_content_part_item(json.JSONEncoder):
     txt_info = ''
@@ -55,18 +53,9 @@ class ts_content_part_item(json.JSONEncoder):
     def __str__(self):
         return 'info: ' + self.txt_info + ' img: ' + self.img_url
     
-#     def default(self, obj):
-#         d = {}
-#         d['txt'] = obj.txt_info
-#         d['img'] = obj.img_url
-#         d['__class__'] = obj.__class__.__name__
-#         d['__module__'] = obj.__module__
-#         d.update(obj.__dict__)
-#         return obj.__dict__
-    
 def parse_content(url):
 #     print(url)
-    page = urlopen(url)
+    page = urllib2.urlopen(url)
     html = page.read()
     source = html.decode('GBK')
     
@@ -77,7 +66,7 @@ def parse_content(url):
     return result
 
 def perform_parse_content(source):
-    li = re.finditer(r'<P>【\d*】.*?</P>', source)
+    li = re.finditer(ur'<P>\u3010\d*\u3011.*?</P>', source)
     i = 0
 
     index = []
@@ -96,6 +85,11 @@ def perform_parse_content(source):
             res_item = parse_content_part(part_source)
             res[i - 1].items = res_item
         i += 1
+        
+    part_source = source[pos:source.index('<P>&nbsp;</P>')]
+    res_item = parse_content_part(part_source)
+    res[i - 1].items = res_item
+    
     return res
 
 def parse_content_part(source):
